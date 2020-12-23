@@ -85,16 +85,24 @@ def calculate_distance(app):
 	distance_matrix_img = [([0] * len(all_reports)) for i in range(len(all_reports))]
 	distance_matrix_report = [([0] * len(all_reports)) for i in range(len(all_reports))]
 
+	# preprocess the hist in a dict to improve the efficiency
+	hist_txt_dict = {}
+	hist_img_dict = {}
+	for i in range(len(all_reports)):
+		report = all_reports[i]
+		hist_txt_dict[report] = get_hist_txt(app, hist_txt, report)
+		hist_img_dict[report] = get_hist_img(app, hist_img, report)
+
 	for i in range(len(all_reports)):
 		for j in range(len(all_reports)):
 			report_a = all_reports[i]
 			report_b = all_reports[j]
 
-			hist_txt_a = get_hist_txt(app, hist_txt, report_a)
-			hist_txt_b = get_hist_txt(app, hist_txt, report_b)
+			hist_txt_a = hist_txt_dict[report_a]
+			hist_txt_b = hist_txt_dict[report_b]
 
-			hist_img_a = get_hist_img(app, hist_img, report_a)
-			hist_img_b = get_hist_img(app, hist_img, report_b)
+			hist_img_a = hist_img_dict[report_a]
+			hist_img_b = hist_img_dict[report_b]
 
 			distance_txt = distance_txt_jaccard(hist_txt_a, hist_txt_b)
 			distance_imgset = distance_imgset_jaccard(hist_img_a, hist_img_b)
